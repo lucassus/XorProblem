@@ -1,0 +1,149 @@
+/*
+ * NeuralNetwork.java
+ *
+ * Created on 14 kwiecieñ 2006, 12:16
+ *
+ * To change this template, choose Tools | Template Manager
+ * and open the template in the editor.
+ */
+
+package edu.agh.electronics.neural;
+
+import java.util.Random;
+
+/**
+ *
+ * @author Lukasz Bandzarewicz <lucassus@gmail.com>
+ */
+public class NeuralNetwork {
+    
+    private NeuralLayer inputLayer;
+    private NeuralLayer outputLayer;
+    private NeuralLayer[] hiddenLayers;
+    
+    /** Creates a new instance of NeuralNetwork */
+    public NeuralNetwork(int inputNeuronsCount, int hiddenNeuronsCount, int outputNeuronsCount, int hiddenLayersCount, ActivationFunction f) {
+        if (inputNeuronsCount < 1 || hiddenNeuronsCount < 1 || outputNeuronsCount < 0 || hiddenLayersCount < 0) {
+            throw new IllegalArgumentException();
+        }
+        
+        // tworzenie odpowiednich warstw
+        inputLayer = new NeuralLayer(inputNeuronsCount, new LinearFunction(), "Input layer");
+        outputLayer = new NeuralLayer(outputNeuronsCount, f, "Output layer");
+        
+        hiddenLayers = new NeuralLayer[hiddenLayersCount];
+        for (int i=0; i<hiddenLayersCount; i++) {
+            hiddenLayers[i] = new NeuralLayer(hiddenNeuronsCount, f, "Hidden layer [" + i + "]");
+        }
+        
+        // laczenie warstw
+        outputLayer.connectWithLayer(hiddenLayers[hiddenLayersCount - 1]);
+        for (int i = (hiddenLayersCount - 1); i>0; i--) {
+            hiddenLayers[i].connectWithLayer(hiddenLayers[i - 1]);
+        }
+        hiddenLayers[0].connectWithLayer(inputLayer);
+    }
+    
+    /**
+     *
+     */
+    public NeuralNetwork(int inputNeuronsCount, int outputNeuronsCount, NeuralLayer[] hiddenLayers, ActivationFunction f) {
+        if (inputNeuronsCount < 1 || outputNeuronsCount < 1) {
+            throw new IllegalArgumentException();
+        }
+        
+        inputLayer = new NeuralLayer(inputNeuronsCount, new LinearFunction(), "Input layer");
+        outputLayer = new NeuralLayer(outputNeuronsCount, f, "Output layer");
+        
+        if (hiddenLayers.length == 0) {
+            inputLayer.connectWithLayer(outputLayer);
+        } else {
+            this.hiddenLayers = hiddenLayers;
+            outputLayer.connectWithLayer(this.hiddenLayers[hiddenLayers.length - 1]);
+            for (int i = (hiddenLayers.length - 1); i>0; i--) {
+                this.hiddenLayers[i].connectWithLayer(this.hiddenLayers[i - 1]);
+            }
+            this.hiddenLayers[0].connectWithLayer(inputLayer);
+        }
+    }
+    
+    /**
+     * Randomize network weight
+     * @param min minimum initial weight
+     * @param max maximum minitial weight
+     */
+    public void randomizeWeight(double min, double max) {
+        if (min >= max) {
+            throw new IllegalArgumentException();
+        }
+        
+        Random rand = new Random();
+        outputLayer.randomizeWeight(min, max, rand);
+        if (hiddenLayers != null) {
+            for (int i=0; i<hiddenLayers.length; i++) {
+                hiddenLayers[i].randomizeWeight(min, max, rand);
+            }
+        }
+        
+    }
+    
+    /**
+     * Computes network response
+     * @param input input values vector
+     * @return Network response vector
+     */
+    public double[] compute(double[] input) {
+        inputLayer.compute();
+        
+        if (hiddenLayers != null) {
+            for (int i=0; i<hiddenLayers.length; i++) {
+                hiddenLayers[i].compute();
+            }
+        }
+        outputLayer.compute();
+        
+        return outputLayer.getOutputs();
+    }
+    
+    /**
+     * Start network learning using Back Propagation algorithm
+     * @param input learning data
+     * @param expectedOutput expected network response
+     * @param learningRate Back Propagation algorith learning rate
+     */
+    public void learn(double[] input, double[] expectedOutput, double learningRate) {
+        outputLayer.resetErrors();
+        
+        if (hiddenLayers != null) {
+            for (int i=0; i<hiddenLayers.length; i++) {
+                hiddenLayers[i].resetErrors();
+            }
+        }
+        
+        compute(input);
+        
+        outputLayer.computeErrors(expectedOutput);
+        outputLayer.backPropagation();
+        if (hiddenLayers != null) {
+            for (int i = (hiddenLayers.length - 1); i>0; i--) {
+                hiddenLayers[i].backPropagation();
+            }
+        }
+        
+        outputLayer.correctWeights(learningRate);
+        if (hiddenLayers != null) {
+            for (int i=0; i<hiddenLayers.length; i++) {
+                hiddenLayers[i].correctWeights(learningRate);
+            }
+        }
+    }
+    
+    /**
+     * Returns network error
+     * @return network error
+     */
+    public double getError() {
+        return Math.sqrt(outputLayer.getGlobalError() / (2));
+    }
+    
+}
