@@ -1,23 +1,10 @@
-/*
- * Synapse.java
- *
- * Created on 28 kwiecieñ 2006, 19:47
- *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
- */
-
 package edu.agh.eit.neural;
 
-/**
- * 
- * @author Lukasz Bandzarewicz <lucassus@gmail.com>
- */
 public class Synapse {
-    
+
     private double weight = 1.0;
     private Neuron neuron;
-    
+
     /** Creates a new instance of Synapse */
     public Synapse(Neuron neuron) {
         this.neuron = neuron;
@@ -40,5 +27,4 @@ public class Synapse {
     public Neuron getNeuron() {
         return neuron;
     }
-    
 }

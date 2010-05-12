@@ -1,9 +1,8 @@
 /*
  * AlphaRelease.java
  *
- * Created on 21 kwiecieñ 2006, 16:21
+ * Created on 21 kwiecieï¿½ 2006, 16:21
  */
-
 package edu.agh.eit.xorproblem.gui;
 
 import edu.agh.eit.neural.NeuralLayer;
@@ -45,188 +44,174 @@ import javax.swing.table.TableModel;
  * @author Lukasz Bandzarewicz <lucassus@gmail.com>
  */
 public class XorProblemPanel extends javax.swing.JPanel {
-    
+
     private static int RESPONSE_PLANE_X = 100;
     private static int RESPONSE_PLANE_Y = 100;
-    
+
     private enum ApplicationState {
-	IDDLE,
-	LEARNING_IN_PROGRESS
+
+        IDDLE,
+        LEARNING_IN_PROGRESS
     }
-    
+
     private class ResponsePanel extends JPanel {
-	
-	private int width;
-	private int height;
-	
-	private BufferedImage image = null;
-	
-	public ResponsePanel() {
-	    this(RESPONSE_PLANE_X, RESPONSE_PLANE_Y);
-	}
-	
-	public ResponsePanel(int width, int height) {
-	    super();
-	    this.width = width;
-	    this.height = height;
-	    
-	    image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-	}
-	
-	public void paint(Graphics g) {
-	    if (image != null) {
-		g.drawImage(image, 0, 0, null);
-	    }
-	}
-	
-	public void update() {
-	    Graphics2D g2d = image.createGraphics();
-	    
-	    int x_scale = (int)(200 / RESPONSE_PLANE_X);
-	    int y_scale = (int)(200 / RESPONSE_PLANE_Y);
-	    for (int i=0; i < RESPONSE_PLANE_X; i++) {
-		for (int j=0; j < RESPONSE_PLANE_Y; j++) {
-		    
-		    int r = (int)(networkResponse[i][j] * 255);
-		    if (r > 255) {
-			r  = 255;
-		    } else if (r < 0) {
-			r = 0;
-		    }
-		    
-		    int g = Math.abs(255 - r);
-		    if (g > 255) {
-			g = 255;
-		    } else if (g < 0) {
-			g = 0;
-		    }
-		    
-		    g2d.setColor(new Color(r, g, 0));
-		    g2d.fillRect(i*x_scale, (RESPONSE_PLANE_Y - j - 1)*y_scale, x_scale, y_scale);
-		}
-	    }
-	    
-	    g2d.setColor(Color.BLACK);
-	    g2d.drawString("[A=0;B=0]", 0, 171);
-	    g2d.drawString("[A=0;B=1]", 0, 10);
-	    g2d.drawString("[A=1;B=0]", 140, 171);
-	    g2d.drawString("[A=1;B=1]", 140, 10);
-	    
-	    g2d.dispose();
-	    
-	    repaint();
-	}
+
+        private int width;
+        private int height;
+        private BufferedImage image = null;
+
+        public ResponsePanel() {
+            this(RESPONSE_PLANE_X, RESPONSE_PLANE_Y);
+        }
+
+        public ResponsePanel(int width, int height) {
+            super();
+            this.width = width;
+            this.height = height;
+
+            image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        }
+
+        @Override
+        public void paint(Graphics g) {
+            if (image != null) {
+                g.drawImage(image, 0, 0, null);
+            }
+        }
+
+        public void update() {
+            Graphics2D g2d = image.createGraphics();
+
+            int x_scale = (int) (200 / RESPONSE_PLANE_X);
+            int y_scale = (int) (200 / RESPONSE_PLANE_Y);
+            for (int i = 0; i < RESPONSE_PLANE_X; i++) {
+                for (int j = 0; j < RESPONSE_PLANE_Y; j++) {
+
+                    int r = (int) (networkResponse[i][j] * 255);
+                    if (r > 255) {
+                        r = 255;
+                    } else if (r < 0) {
+                        r = 0;
+                    }
+
+                    int g = Math.abs(255 - r);
+                    if (g > 255) {
+                        g = 255;
+                    } else if (g < 0) {
+                        g = 0;
+                    }
+
+                    g2d.setColor(new Color(r, g, 0));
+                    g2d.fillRect(i * x_scale, (RESPONSE_PLANE_Y - j - 1) * y_scale, x_scale, y_scale);
+                }
+            }
+
+            g2d.setColor(Color.BLACK);
+            g2d.drawString("[A=0;B=0]", 0, 171);
+            g2d.drawString("[A=0;B=1]", 0, 10);
+            g2d.drawString("[A=1;B=0]", 140, 171);
+            g2d.drawString("[A=1;B=1]", 140, 10);
+
+            g2d.dispose();
+
+            repaint();
+        }
     }
-    
     private ResponsePanel responsePanel = null;
-    
     private double[][] networkInput;
     private double[][] networkDesiredOutput;
     private double[] networkOutput;
     private double[][] networkResponse = new double[RESPONSE_PLANE_X][RESPONSE_PLANE_Y];
-    
     private ApplicationState state = ApplicationState.IDDLE;
-    
     public static int MINIMUM_HIDDEN_LAYERS = 0;
     public static int MAXIMUM_HIDDEN_LAYERS = 20;
-    
     private int hiddenLayersCount = 1;
-    
     public static int MINIMUM_EPOCHS = 1;
     public static int MAXIMUM_EPOCHS = 10000000;
-    
     private int learningPatternsCount = 4;
-    
     public static int MINIMUM_DATA_PATTERNS = 1;
     public static int MAXIMUM_DATA_PATTERNS = 50;
-    
     private HiddenLayersTableModel hiddenLayersTableModel = new HiddenLayersTableModel();
     private LearningPatternsDataModel learningPatternsDataModel = new LearningPatternsDataModel();
     private NetworkResponseTableModel networkResponseTableModel = new NetworkResponseTableModel();
-    
     private JFormattedTextField tf;
-    
     private NeuralNetwork nn = null;
-    
     private Object[][] xorData = {
-	{0, 0, 0},
-	{0, 1, 1},
-	{1, 0, 1},
-	{1, 1, 0}
+        {0, 0, 0},
+        {0, 1, 1},
+        {1, 0, 1},
+        {1, 1, 0}
     };
-    
     private Object[][] andData = {
-	{0, 0, 0},
-	{0, 1, 0},
-	{1, 0, 0},
-	{1, 1, 1}
+        {0, 0, 0},
+        {0, 1, 0},
+        {1, 0, 0},
+        {1, 1, 1}
     };
-    
     private Object[][] orData = {
-	{0, 0, 0},
-	{0, 1, 1},
-	{1, 0, 1},
-	{1, 1, 1}
+        {0, 0, 0},
+        {0, 1, 1},
+        {1, 0, 1},
+        {1, 1, 1}
     };
-    
     private Object[][] nandData = {
-	{0, 0, 1},
-	{0, 1, 1},
-	{1, 0, 1},
-	{1, 1, 0}
+        {0, 0, 1},
+        {0, 1, 1},
+        {1, 0, 1},
+        {1, 1, 0}
     };
-    
     private Object[][] norData = {
-	{0, 0, 1},
-	{0, 1, 0},
-	{1, 0, 0},
-	{1, 1, 0}
+        {0, 0, 1},
+        {0, 1, 0},
+        {1, 0, 0},
+        {1, 1, 0}
     };
-    
+
     /** Creates new form AlphaRelease */
     public XorProblemPanel() {
-	initComponents();
-	
-	UIManager.LookAndFeelInfo[] info = UIManager.getInstalledLookAndFeels();
-	for (int i=0; i<info.length; i++) {
-	    // Get the name of the look and feel that is suitable for display to the user
-	    String humanReadableName = info[i].getName();
-	    final String className = info[i].getClassName();
-	    
-	    JMenuItem lookAndFeelMenuItem = new JMenuItem(humanReadableName);
-	    lookAndFeelMenuItem.addActionListener(new java.awt.event.ActionListener() {
-		public void actionPerformed(java.awt.event.ActionEvent evt) {
-		    try {
-			UIManager.setLookAndFeel(className);
-			SwingUtilities.updateComponentTreeUI(XorProblemPanel.this);
-		    } catch (InstantiationException e) {
-		    } catch (ClassNotFoundException e) {
-		    } catch (UnsupportedLookAndFeelException e) {
-		    } catch (IllegalAccessException e) {
-		    }
-		}
-	    });
-	    
-	    menuLookAndFeel.add(lookAndFeelMenuItem);
-	    
-	}
-	
-	responsePanel = new ResponsePanel(200, 200);
-	panelResponseTop.add(responsePanel, BorderLayout.CENTER);
-	
-	// help
-	URL helpURL = XorProblem.class.getResource("/resources/help/help.html");
-	if (helpURL != null) {
-	    try {
-		editorPaneHelp.setPage(helpURL);
-	    } catch (IOException ex) {
-		ex.printStackTrace();
-	    }
-	}
-	// end help
-	
+        initComponents();
+
+        UIManager.LookAndFeelInfo[] info = UIManager.getInstalledLookAndFeels();
+        for (int i = 0; i < info.length; i++) {
+            // Get the name of the look and feel that is suitable for display to the user
+            String humanReadableName = info[i].getName();
+            final String className = info[i].getClassName();
+
+            JMenuItem lookAndFeelMenuItem = new JMenuItem(humanReadableName);
+            lookAndFeelMenuItem.addActionListener(new java.awt.event.ActionListener() {
+
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    try {
+                        UIManager.setLookAndFeel(className);
+                        SwingUtilities.updateComponentTreeUI(XorProblemPanel.this);
+                    } catch (InstantiationException e) {
+                    } catch (ClassNotFoundException e) {
+                    } catch (UnsupportedLookAndFeelException e) {
+                    } catch (IllegalAccessException e) {
+                    }
+                }
+            });
+
+            menuLookAndFeel.add(lookAndFeelMenuItem);
+
+        }
+
+        responsePanel = new ResponsePanel(200, 200);
+        panelResponseTop.add(responsePanel, BorderLayout.CENTER);
+
+        // help
+        URL helpURL = XorProblem.class.getResource("/resources/help/help.html");
+        if (helpURL != null) {
+            try {
+                editorPaneHelp.setPage(helpURL);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+        // end help
+
     }
-    
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -816,263 +801,268 @@ public class XorProblemPanel extends javax.swing.JPanel {
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
-    
+
     private void comboBoxActivationFunctionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxActivationFunctionActionPerformed
-	if (comboBoxActivationFunction.getSelectedIndex() == 1) {
-	    labelFunctionProperty.setEnabled(true);
-	    textFieldFunctionProperty.setEnabled(true);
-	} else {
-	    labelFunctionProperty.setEnabled(false);
-	    textFieldFunctionProperty.setEnabled(false);
-	}
+        if (comboBoxActivationFunction.getSelectedIndex() == 1) {
+            labelFunctionProperty.setEnabled(true);
+            textFieldFunctionProperty.setEnabled(true);
+        } else {
+            labelFunctionProperty.setEnabled(false);
+            textFieldFunctionProperty.setEnabled(false);
+        }
     }//GEN-LAST:event_comboBoxActivationFunctionActionPerformed
-    
+
     private void tabbedPaneStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tabbedPaneStateChanged
-	if (tabbedPane.getSelectedIndex() == 2) {
-	    computeNetworkResponse();
-	    responsePanel.update();
-	}
+        if (tabbedPane.getSelectedIndex() == 2) {
+            computeNetworkResponse();
+            responsePanel.update();
+        }
     }//GEN-LAST:event_tabbedPaneStateChanged
-    
+
     private void comboBoxLearningPatternActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxLearningPatternActionPerformed
-	String selected = (String)comboBoxLearningPattern.getSelectedItem();
-	if (selected.equalsIgnoreCase("XOR")) {
-	    tableLearningData.setModel(new LearningPatternsDataModel(xorData));
-	} else if (selected.equalsIgnoreCase("AND")) {
-	    tableLearningData.setModel(new LearningPatternsDataModel(andData));
-	} else if (selected.equalsIgnoreCase("OR")) {
-	    tableLearningData.setModel(new LearningPatternsDataModel(orData));
-	} else if (selected.equalsIgnoreCase("NAND")) {
-	    tableLearningData.setModel(new LearningPatternsDataModel(nandData));
-	} else if (selected.equalsIgnoreCase("NOR")) {
-	    tableLearningData.setModel(new LearningPatternsDataModel(norData));
-	}
+        String selected = (String) comboBoxLearningPattern.getSelectedItem();
+        if (selected.equalsIgnoreCase("XOR")) {
+            tableLearningData.setModel(new LearningPatternsDataModel(xorData));
+        } else if (selected.equalsIgnoreCase("AND")) {
+            tableLearningData.setModel(new LearningPatternsDataModel(andData));
+        } else if (selected.equalsIgnoreCase("OR")) {
+            tableLearningData.setModel(new LearningPatternsDataModel(orData));
+        } else if (selected.equalsIgnoreCase("NAND")) {
+            tableLearningData.setModel(new LearningPatternsDataModel(nandData));
+        } else if (selected.equalsIgnoreCase("NOR")) {
+            tableLearningData.setModel(new LearningPatternsDataModel(norData));
+        }
     }//GEN-LAST:event_comboBoxLearningPatternActionPerformed
-    
+
     private void spinnerDataPatternsStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spinnerDataPatternsStateChanged
-	int newValue = Integer.parseInt(spinnerDataPatterns.getValue().toString());
-	
-	if (newValue > learningPatternsCount) {
-	    learningPatternsDataModel.addRow(new Object[] {0, 0, 0});
-	} else if (newValue < learningPatternsCount) {
-	    learningPatternsDataModel.removeRow(learningPatternsCount - 1);
-	}
-	
-	learningPatternsCount = newValue;
+        int newValue = Integer.parseInt(spinnerDataPatterns.getValue().toString());
+
+        if (newValue > learningPatternsCount) {
+            learningPatternsDataModel.addRow(new Object[]{0, 0, 0});
+        } else if (newValue < learningPatternsCount) {
+            learningPatternsDataModel.removeRow(learningPatternsCount - 1);
+        }
+
+        learningPatternsCount = newValue;
     }//GEN-LAST:event_spinnerDataPatternsStateChanged
-    
+
     private void menuItemExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemExitActionPerformed
-	
-	int answer = JOptionPane.showConfirmDialog(this, "Do you really want do exit?");
-	
-	if (answer == JOptionPane.YES_OPTION) {
-	    System.exit(0);
-	}
-	
+
+        int answer = JOptionPane.showConfirmDialog(this, "Do you really want do exit?");
+
+        if (answer == JOptionPane.YES_OPTION) {
+            System.exit(0);
+        }
+
     }//GEN-LAST:event_menuItemExitActionPerformed
-    
+
     private void menuItemAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAboutActionPerformed
-	AboutDialog about = new AboutDialog(new javax.swing.JFrame(), true);
-	about.setLocationRelativeTo(this);
-	about.setVisible(true);
+        AboutDialog about = new AboutDialog(new javax.swing.JFrame(), true);
+        about.setLocationRelativeTo(this);
+        about.setVisible(true);
     }//GEN-LAST:event_menuItemAboutActionPerformed
-    
+
     private void menuItemHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemHelpActionPerformed
 // TODO add your handling code here:
     }//GEN-LAST:event_menuItemHelpActionPerformed
-    
+
     private void spinnerHiddenLayersCountStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spinnerHiddenLayersCountStateChanged
-	int newValue = Integer.parseInt(spinnerHiddenLayersCount.getValue().toString());
-	
-	if (newValue > hiddenLayersCount) {
-	    hiddenLayersTableModel.addRow(new Object[2]);
-	} else if (newValue < hiddenLayersCount) {
-	    hiddenLayersTableModel.removeRow(hiddenLayersCount - 1);
-	}
-	
-	hiddenLayersCount = newValue;
+        int newValue = Integer.parseInt(spinnerHiddenLayersCount.getValue().toString());
+
+        if (newValue > hiddenLayersCount) {
+            hiddenLayersTableModel.addRow(new Object[2]);
+        } else if (newValue < hiddenLayersCount) {
+            hiddenLayersTableModel.removeRow(hiddenLayersCount - 1);
+        }
+
+        hiddenLayersCount = newValue;
     }//GEN-LAST:event_spinnerHiddenLayersCountStateChanged
-    
+
     private void startLearningEvent(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startLearningEvent
-	
-	if (state == ApplicationState.LEARNING_IN_PROGRESS) {
-	    
-	    SwingUtilities.invokeLater(new Runnable() {
-		public void run() {
-		    enableComponents(true);
-		}
-	    });
-	    
-	    state = ApplicationState.IDDLE;
-	    
-	    return;
-	}
-	
-	SwingUtilities.invokeLater(new Runnable() {
-	    public void run() {
-		enableComponents(false);
-	    }
-	});
-	
-	ActivationFunction activationFunction = null;
-	
-	int index = comboBoxActivationFunction.getSelectedIndex();
-	switch (index) {
-	    case 0:
-		activationFunction = new LinearFunction();
-		break;
-	    case 1:
-	    default:
-		double beta = 0.9;
-		try {
-		    Double.parseDouble(textFieldFunctionProperty.getText());
-		} catch (NumberFormatException e) {}
-		activationFunction = new SigmoidFunction(beta);
-		break;
-	    case 2:
-		activationFunction = new TanhFunction();
-		break;
-	    case 3:
-		activationFunction = new GaussianFunction();
-		break;
-	}
-	
-	NeuralLayer[] layers = new NeuralLayer[hiddenLayersCount];
-	for (int i=0; i < hiddenLayersCount; i++) {
-	    int neuronsCount = Integer.parseInt(hiddenLayersTableModel.getValueAt(i, 1).toString());
-	    layers[i] = new NeuralLayer(neuronsCount, activationFunction);
-	}
-	
-	nn = new NeuralNetwork(2, 1, layers, activationFunction);
-	
-	// nerouns weights
-	double lr = 0.9;
-	double min = -1.0;
-	double max = 1.0;
-	try {
-	    lr = Double.parseDouble(textFieldLearningRate.getText());
-	    min = Double.parseDouble(textFieldRandomizeWeightsMin.getText());
-	    max = Double.parseDouble(textFieldRandomizeWeightsMax.getText());
-	} catch (NumberFormatException e) {}
-	nn.randomizeWeight(min, max);
-	// end neurons weights
-	
-	networkInput = new double[learningPatternsCount][2];
-	networkDesiredOutput = new double[learningPatternsCount][];
-	
-	TableModel model = tableLearningData.getModel();
-	for (int i=0; i < learningPatternsCount; i++) {
-	    
-	    networkInput[i][0] = 0.0;
-	    networkInput[i][1] = 0.0;
-	    networkDesiredOutput[i] = new double[1];
-	    networkDesiredOutput[i][0] = 0.0;
-	    
-	    try {
-		networkInput[i][0] = Double.parseDouble(model.getValueAt(i, 0).toString());
-		networkInput[i][1] = Double.parseDouble(model.getValueAt(i, 1).toString());
-		networkDesiredOutput[i][0] = Double.parseDouble(model.getValueAt(i, 2).toString());
-	    } catch (NumberFormatException e) {}
-	    
-	}
-	
-	Object[][] data = new Object[networkInput.length][3];
-	for (int i=0; i<networkInput.length; i++) {
-	    data[i][0] = networkInput[i][0];
-	    data[i][1] = networkInput[i][1];
-	    data[i][2] = 0.0;
-	}
-	
-	networkResponseTableModel = new NetworkResponseTableModel(data);
-	tableNetworkResponse.setModel(networkResponseTableModel);
-	
-	buttonStartLearning.setText("Terminate learning");
-	
-	final int epochs = Integer.parseInt(spinnerEpochs.getValue().toString());
-	progressBarLearning.setMaximum(epochs);
-	final double learningRate = lr;
-	
-	Thread learningThread = new Thread(new Runnable() {
-	    public void run() {
-		
-		progressBarLearning.setValue(0);
-		labelApplicationStatus.setText("Learning in progress");
-		
-		long startTime = System.currentTimeMillis();
-		int i = 0;
-		state = ApplicationState.LEARNING_IN_PROGRESS;
-		while (state == ApplicationState.LEARNING_IN_PROGRESS && i < epochs) {
-		    i++;
-		    
-		    nn.learn(networkInput, networkDesiredOutput, learningRate);
-		    
-		    if (i % 10 == 0) {
-			progressBarLearning.setValue(i);
-			labelApplicationStatus.setText("Learning in progress, Trial #" + i + ", Error: " + nn.getError());
-		    }
-		    
-		    if (tabbedPane.getSelectedIndex() == 2) {
-			// Response panel is visible
-			if (i % 5 == 0) {
-			    computeNetworkResponse();
-			    responsePanel.update();
-			}
-		    }
-		    
-		}
-		
-		long endTime = System.currentTimeMillis();
-		double learningTime = ((double)(endTime - startTime)) / 1000;
-		
-		labelApplicationStatus.setText("Learnign finished after " +
-			learningTime +
-			" seconds," +
-			" Error: " + nn.getError());
-		progressBarLearning.setValue(epochs);
-		
-		SwingUtilities.invokeLater(new Runnable() {
-		    public void run() {
-			enableComponents(true);
-			buttonStartLearning.setText("Start learning");
-		    }
-		});
-		
-		state = ApplicationState.IDDLE;
-		
-	    }
-	});
-	
-	learningThread.start();
-	
+
+        if (state == ApplicationState.LEARNING_IN_PROGRESS) {
+
+            SwingUtilities.invokeLater(new Runnable() {
+
+                public void run() {
+                    enableComponents(true);
+                }
+            });
+
+            state = ApplicationState.IDDLE;
+
+            return;
+        }
+
+        SwingUtilities.invokeLater(new Runnable() {
+
+            public void run() {
+                enableComponents(false);
+            }
+        });
+
+        ActivationFunction activationFunction = null;
+
+        int index = comboBoxActivationFunction.getSelectedIndex();
+        switch (index) {
+            case 0:
+                activationFunction = new LinearFunction();
+                break;
+            case 1:
+            default:
+                double beta = 0.9;
+                try {
+                    Double.parseDouble(textFieldFunctionProperty.getText());
+                } catch (NumberFormatException e) {
+                }
+                activationFunction = new SigmoidFunction(beta);
+                break;
+            case 2:
+                activationFunction = new TanhFunction();
+                break;
+            case 3:
+                activationFunction = new GaussianFunction();
+                break;
+        }
+
+        NeuralLayer[] layers = new NeuralLayer[hiddenLayersCount];
+        for (int i = 0; i < hiddenLayersCount; i++) {
+            int neuronsCount = Integer.parseInt(hiddenLayersTableModel.getValueAt(i, 1).toString());
+            layers[i] = new NeuralLayer(neuronsCount, activationFunction);
+        }
+
+        nn = new NeuralNetwork(2, 1, layers, activationFunction);
+
+        // nerouns weights
+        double lr = 0.9;
+        double min = -1.0;
+        double max = 1.0;
+        try {
+            lr = Double.parseDouble(textFieldLearningRate.getText());
+            min = Double.parseDouble(textFieldRandomizeWeightsMin.getText());
+            max = Double.parseDouble(textFieldRandomizeWeightsMax.getText());
+        } catch (NumberFormatException e) {
+        }
+        nn.randomizeWeight(min, max);
+        // end neurons weights
+
+        networkInput = new double[learningPatternsCount][2];
+        networkDesiredOutput = new double[learningPatternsCount][];
+
+        TableModel model = tableLearningData.getModel();
+        for (int i = 0; i < learningPatternsCount; i++) {
+
+            networkInput[i][0] = 0.0;
+            networkInput[i][1] = 0.0;
+            networkDesiredOutput[i] = new double[1];
+            networkDesiredOutput[i][0] = 0.0;
+
+            try {
+                networkInput[i][0] = Double.parseDouble(model.getValueAt(i, 0).toString());
+                networkInput[i][1] = Double.parseDouble(model.getValueAt(i, 1).toString());
+                networkDesiredOutput[i][0] = Double.parseDouble(model.getValueAt(i, 2).toString());
+            } catch (NumberFormatException e) {
+            }
+
+        }
+
+        Object[][] data = new Object[networkInput.length][3];
+        for (int i = 0; i < networkInput.length; i++) {
+            data[i][0] = networkInput[i][0];
+            data[i][1] = networkInput[i][1];
+            data[i][2] = 0.0;
+        }
+
+        networkResponseTableModel = new NetworkResponseTableModel(data);
+        tableNetworkResponse.setModel(networkResponseTableModel);
+
+        buttonStartLearning.setText("Terminate learning");
+
+        final int epochs = Integer.parseInt(spinnerEpochs.getValue().toString());
+        progressBarLearning.setMaximum(epochs);
+        final double learningRate = lr;
+
+        Thread learningThread = new Thread(new Runnable() {
+
+            public void run() {
+
+                progressBarLearning.setValue(0);
+                labelApplicationStatus.setText("Learning in progress");
+
+                long startTime = System.currentTimeMillis();
+                int i = 0;
+                state = ApplicationState.LEARNING_IN_PROGRESS;
+                while (state == ApplicationState.LEARNING_IN_PROGRESS && i < epochs) {
+                    i++;
+
+                    nn.learn(networkInput, networkDesiredOutput, learningRate);
+
+                    if (i % 10 == 0) {
+                        progressBarLearning.setValue(i);
+                        labelApplicationStatus.setText("Learning in progress, Trial #" + i + ", Error: " + nn.getError());
+                    }
+
+                    if (tabbedPane.getSelectedIndex() == 2) {
+                        // Response panel is visible
+                        if (i % 5 == 0) {
+                            computeNetworkResponse();
+                            responsePanel.update();
+                        }
+                    }
+
+                }
+
+                long endTime = System.currentTimeMillis();
+                double learningTime = ((double) (endTime - startTime)) / 1000;
+
+                labelApplicationStatus.setText("Learnign finished after "
+                        + learningTime
+                        + " seconds,"
+                        + " Error: " + nn.getError());
+                progressBarLearning.setValue(epochs);
+
+                SwingUtilities.invokeLater(new Runnable() {
+
+                    public void run() {
+                        enableComponents(true);
+                        buttonStartLearning.setText("Start learning");
+                    }
+                });
+
+                state = ApplicationState.IDDLE;
+
+            }
+        });
+
+        learningThread.start();
+
     }//GEN-LAST:event_startLearningEvent
-    
+
     private void computeNetworkResponse() {
-	if (nn == null) {
-	    return;
-	}
-	
-	for (int i=0; i<networkResponse.length; i++) {
-	    for (int j=0; j<networkResponse[i].length; j++) {
-		double[] var = {(double)i/networkResponse.length, (double)j/networkResponse[i].length};
-		networkResponse[i][j] = nn.compute(var)[0];
-	    }
-	}
-	
-	networkOutput = new double[networkDesiredOutput.length];
-	for (int i=0; i<networkDesiredOutput.length; i++) {
-	    double[] var = {networkInput[i][0], networkInput[i][1]};
-	    networkOutput[i] = nn.compute(var)[0];
-	}
-	
-	Object[] data = new Object[networkDesiredOutput.length];
-	for (int i=0; i<networkDesiredOutput.length; i++) {
-	    data[i] = networkOutput[i];
-	    networkResponseTableModel.setValueAt(data[i], i, 2);
-	}
-	
+        if (nn == null) {
+            return;
+        }
+
+        for (int i = 0; i < networkResponse.length; i++) {
+            for (int j = 0; j < networkResponse[i].length; j++) {
+                double[] var = {(double) i / networkResponse.length, (double) j / networkResponse[i].length};
+                networkResponse[i][j] = nn.compute(var)[0];
+            }
+        }
+
+        networkOutput = new double[networkDesiredOutput.length];
+        for (int i = 0; i < networkDesiredOutput.length; i++) {
+            double[] var = {networkInput[i][0], networkInput[i][1]};
+            networkOutput[i] = nn.compute(var)[0];
+        }
+
+        Object[] data = new Object[networkDesiredOutput.length];
+        for (int i = 0; i < networkDesiredOutput.length; i++) {
+            data[i] = networkOutput[i];
+            networkResponseTableModel.setValueAt(data[i], i, 2);
+        }
+
     }
-    
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonStartLearning;
     private javax.swing.JComboBox comboBoxActivationFunction;
@@ -1132,24 +1122,23 @@ public class XorProblemPanel extends javax.swing.JPanel {
     private javax.swing.JTextField textFieldRandomizeWeightsMax;
     private javax.swing.JTextField textFieldRandomizeWeightsMin;
     // End of variables declaration//GEN-END:variables
-    
+
     public JMenuBar getMenuBar() {
-	return menuBar;
+        return menuBar;
     }
-    
+
     private void enableComponents(boolean enabled) {
-	if (comboBoxActivationFunction.getSelectedIndex() == 1) {
-	    textFieldFunctionProperty.setEnabled(enabled);
-	}
-	
-	spinnerHiddenLayersCount.setEnabled(enabled);
-	tableHiddenLayers.setEnabled(enabled);
-	
-	spinnerEpochs.setEnabled(enabled);
-	spinnerDataPatterns.setEnabled(enabled);
-	textFieldLearningRate.setEnabled(enabled);
-	comboBoxLearningPattern.setEnabled(enabled);
-	tableLearningData.setEnabled(enabled);
+        if (comboBoxActivationFunction.getSelectedIndex() == 1) {
+            textFieldFunctionProperty.setEnabled(enabled);
+        }
+
+        spinnerHiddenLayersCount.setEnabled(enabled);
+        tableHiddenLayers.setEnabled(enabled);
+
+        spinnerEpochs.setEnabled(enabled);
+        spinnerDataPatterns.setEnabled(enabled);
+        textFieldLearningRate.setEnabled(enabled);
+        comboBoxLearningPattern.setEnabled(enabled);
+        tableLearningData.setEnabled(enabled);
     }
-    
 }
