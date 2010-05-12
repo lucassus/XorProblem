@@ -4,6 +4,8 @@ import javax.swing.JSpinner;
 import javax.swing.table.DefaultTableModel;
 
 public class HiddenLayersTableModel extends DefaultTableModel {
+    private static final int HIDDEN_LAYER_COLUMN_INDEX = 0;
+    public static final int NEURONS_COUNT_COLUMN_INDEX = 1;
 
     private static String[] columnNames = {
         "Hidden layer name",
@@ -25,9 +27,9 @@ public class HiddenLayersTableModel extends DefaultTableModel {
         if (column == 0) {
             return "Hidden layer #" + (row + 1);
         } else if (column == 1) {
-            Object v = super.getValueAt(row, 1);
-            if (v != null) {
-                return v;
+            Object value = super.getValueAt(row, 1);
+            if (value != null) {
+                return value;
             } else {
                 return new Integer(2);
             }
@@ -38,17 +40,18 @@ public class HiddenLayersTableModel extends DefaultTableModel {
 
     @Override
     public boolean isCellEditable(int row, int column) {
-        if (column == 0) {
+        if (column == HIDDEN_LAYER_COLUMN_INDEX) {
             return false;
         }
+        
         return true;
     }
 
     @Override
     public Class<?> getColumnClass(int columnIndex) {
-        if (columnIndex == 0) {
+        if (columnIndex == HIDDEN_LAYER_COLUMN_INDEX) {
             return String.class;
-        } else if (columnIndex == 1) {
+        } else if (columnIndex == NEURONS_COUNT_COLUMN_INDEX) {
             return JSpinner.class;
         }
 

@@ -1,6 +1,6 @@
 package edu.agh.eit.neural.functions;
 
-public class SigmoidFunction implements ActivationFunction {
+public class SigmoidFunction implements IActivationFunction {
 
     private double beta;
 

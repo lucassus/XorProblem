@@ -1,11 +1,11 @@
 package edu.agh.eit.neural;
 
-import edu.agh.eit.neural.functions.ActivationFunction;
+import edu.agh.eit.neural.functions.IActivationFunction;
 
 public class NeuralLayer {
 
-    private Neuron[] neurons = null;
-    private int neuronsCount = 0;
+    private Neuron[] neurons;
+    private int neuronsCount;
 
     /** Creates a new instance of NeuralLayer */
     public NeuralLayer(int neuronsCount) {
@@ -15,25 +15,20 @@ public class NeuralLayer {
 
         this.neuronsCount = neuronsCount;
         neurons = new Neuron[neuronsCount];
-
         for (int i = 0; i < neuronsCount; i++) {
             neurons[i] = new Neuron();
         }
-
     }
 
-    public NeuralLayer(int neuronsCount, ActivationFunction f) {
+    public NeuralLayer(int neuronsCount, IActivationFunction function) {
         this(neuronsCount);
-        setActivationFunction(f);
+        setActivationFunction(function);
     }
 
-    /**
-     * 
-     */
     public void connectWith(NeuralLayer otherLayer) {
-        for (Neuron otherNeurons : otherLayer.neurons) {
-            for (Neuron n : neurons) {
-                otherNeurons.addSynapse(new Synapse(n));
+        for (Neuron otherNeuron : otherLayer.neurons) {
+            for (Neuron neuron : neurons) {
+                otherNeuron.addSynapse(new Synapse(neuron));
             }
         }
     }
@@ -46,9 +41,9 @@ public class NeuralLayer {
         return neuronsCount;
     }
 
-    void setActivationFunction(ActivationFunction f) {
-        for (Neuron n : neurons) {
-            n.setActivationFunction(f);
+    void setActivationFunction(IActivationFunction function) {
+        for (Neuron neuron : neurons) {
+            neuron.setActivationFunction(function);
         }
     }
 }

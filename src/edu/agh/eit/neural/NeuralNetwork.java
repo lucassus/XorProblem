@@ -1,12 +1,13 @@
 package edu.agh.eit.neural;
 
 import java.util.Random;
-import edu.agh.eit.neural.functions.ActivationFunction;
+import edu.agh.eit.neural.functions.IActivationFunction;
 import edu.agh.eit.neural.events.NeuralNetworkEventListener;
 import edu.agh.eit.neural.events.NeuralNetworkLearningEvent;
 import javax.swing.event.EventListenerList;
 
 public class NeuralNetwork {
+    public static final int LEARNING_EVENT_CYCLE = 100;
 
     /**
      * Mean squared error.
@@ -41,7 +42,7 @@ public class NeuralNetwork {
     private boolean useBias = true;
     protected EventListenerList learningListeners = new EventListenerList();
 
-    public NeuralNetwork(int inputs, int outputs, NeuralLayer[] hiddenLayers, ActivationFunction f) {
+    public NeuralNetwork(int inputs, int outputs, NeuralLayer[] hiddenLayers, IActivationFunction f) {
         if (inputs <= 0 || outputs <= 0) {
             throw new IllegalArgumentException();
         }
@@ -73,27 +74,27 @@ public class NeuralNetwork {
 
         // randomize weights in hidden layers
         if (hiddenLayers != null) {
-            for (int i = 0; i < hiddenLayers.length; i++) {
-                for (Neuron n : hiddenLayers[i].getNeurons()) {
-                    for (Synapse s : n.getInputSynapses()) {
-                        s.setWeight((rand.nextDouble() * (max - min)) + min);
+            for (NeuralLayer hiddenLayer : hiddenLayers) {
+                for (Neuron neuron : hiddenLayer.getNeurons()) {
+                    for (Synapse synapse : neuron.getInputSynapses()) {
+                        synapse.setWeight((rand.nextDouble() * (max - min)) + min);
                     }
 
                     if (useBias) {
-                        n.setBiasWeight((rand.nextDouble() * (max - min)) + min);
+                        neuron.setBiasWeight((rand.nextDouble() * (max - min)) + min);
                     }
                 }
             }
         }
 
         // randomize weights in output layer
-        for (Neuron n : outputLayer.getNeurons()) {
-            for (Synapse s : n.getInputSynapses()) {
-                s.setWeight((rand.nextDouble() * (max - min)) + min);
+        for (Neuron neuron : outputLayer.getNeurons()) {
+            for (Synapse synapse : neuron.getInputSynapses()) {
+                synapse.setWeight((rand.nextDouble() * (max - min)) + min);
             }
 
             if (useBias) {
-                n.setBiasWeight((rand.nextDouble() * (max - min)) + min);
+                neuron.setBiasWeight((rand.nextDouble() * (max - min)) + min);
             }
         }
 
@@ -108,15 +109,14 @@ public class NeuralNetwork {
         }
 
         if (hiddenLayers != null) {
-            for (int i = 0; i < hiddenLayers.length; i++) {         // foreach hidden layers
-                for (Neuron n : hiddenLayers[i].getNeurons()) {  // foreach neurons in layer
-                    n.compute();
+            for (NeuralLayer hiddenLayer : hiddenLayers) {
+                for (Neuron neuron : hiddenLayer.getNeurons()) {  // foreach neurons in layer
+                    neuron.compute();
                 }
             }
         }
 
         Neuron[] outputNeurons = outputLayer.getNeurons();
-        Neuron n;
         for (int i = 0; i < response.length; i++) {
             outputNeurons[i].compute();
             response[i] = outputNeurons[i].getOutput();
@@ -134,14 +134,12 @@ public class NeuralNetwork {
      * @param learningRate
      */
     public void learn(double[][] inputs, double[][] desiredOutput, int epochs, double learningRate) {
-
         networkState = NetworkState.LEARNING_IN_PROGRESS;
 
         for (int i = 0; i < epochs; i++) {
-
             learn(inputs, desiredOutput, learningRate);
 
-            if (i % 100 == 0) {
+            if (i % LEARNING_EVENT_CYCLE == 0) {
                 fireLearningEvent(new NeuralNetworkLearningEvent(this, i, getMse()));
             }
 
@@ -170,10 +168,10 @@ public class NeuralNetwork {
                 globalError += error * error;
 
                 // back propagation
-                for (Synapse s : outputNeuron.getInputSynapses()) {
-                    s.getNeuron().setError(
-                            s.getNeuron().getError()
-                            + s.getWeight() * outputNeuron.getError());
+                for (Synapse synapse : outputNeuron.getInputSynapses()) {
+                    synapse.getNeuron().setError(
+                            synapse.getNeuron().getError()
+                            + synapse.getWeight() * outputNeuron.getError());
                 }
 
             }
@@ -183,48 +181,48 @@ public class NeuralNetwork {
             if (hiddenLayers != null) {
                 for (int k = hiddenLayers.length - 1; k > 0; k--) {
                     for (Neuron outputNeuron : hiddenLayers[k].getNeurons()) {
-                        for (Synapse s : outputNeuron.getInputSynapses()) {
-                            s.getNeuron().setError(
-                                    s.getNeuron().getError()
-                                    + s.getWeight() * outputNeuron.getError());
+                        for (Synapse synapse : outputNeuron.getInputSynapses()) {
+                            synapse.getNeuron().setError(
+                                    synapse.getNeuron().getError()
+                                    + synapse.getWeight() * outputNeuron.getError());
                         }
                     }
                 }
             }
 
             // correct weights
-            for (Neuron n : outputLayer.getNeurons()) {
-                for (Synapse s : n.getInputSynapses()) {
-                    s.setWeight(
-                            s.getWeight()
-                            + learningRate * n.getError() * n.getActivationFunction().computeDerivative(n.getOutput()) * s.getNeuron().getOutput());
+            for (Neuron neuron : outputLayer.getNeurons()) {
+                for (Synapse synapse : neuron.getInputSynapses()) {
+                    synapse.setWeight(
+                            synapse.getWeight()
+                            + learningRate * neuron.getError() * neuron.getActivationFunction().computeDerivative(neuron.getOutput()) * synapse.getNeuron().getOutput());
                 }
 
                 if (useBias) {
                     // correct bias weight
-                    n.setBiasWeight(n.getBiasWeight() + learningRate * n.getError() * n.getActivationFunction().computeDerivative(n.getOutput()));
+                    neuron.setBiasWeight(neuron.getBiasWeight() + learningRate * neuron.getError() * neuron.getActivationFunction().computeDerivative(neuron.getOutput()));
                 }
 
                 // reset neuron globalError
-                n.setError(0);
+                neuron.setError(0);
             }
 
             if (hiddenLayers != null) {
                 for (int k = 0; k < hiddenLayers.length; k++) {
-                    for (Neuron n : hiddenLayers[k].getNeurons()) {
-                        for (Synapse s : n.getInputSynapses()) {
-                            s.setWeight(
-                                    s.getWeight()
-                                    + learningRate * n.getError() * n.getActivationFunction().computeDerivative(n.getOutput()) * s.getNeuron().getOutput());
+                    for (Neuron neuron : hiddenLayers[k].getNeurons()) {
+                        for (Synapse synapse : neuron.getInputSynapses()) {
+                            synapse.setWeight(
+                                    synapse.getWeight()
+                                    + learningRate * neuron.getError() * neuron.getActivationFunction().computeDerivative(neuron.getOutput()) * synapse.getNeuron().getOutput());
                         }
 
                         if (useBias) {
                             // correct bias weight
-                            n.setBiasWeight(n.getBiasWeight() + learningRate * n.getError() * n.getActivationFunction().computeDerivative(n.getOutput()));
+                            neuron.setBiasWeight(neuron.getBiasWeight() + learningRate * neuron.getError() * neuron.getActivationFunction().computeDerivative(neuron.getOutput()));
                         }
 
                         // reset neuron globalError
-                        n.setError(0);
+                        neuron.setError(0);
                     }
                 }
             }
@@ -242,25 +240,25 @@ public class NeuralNetwork {
     public void setUseBias(boolean useBias) {
         this.useBias = useBias;
         for (NeuralLayer hiddenLayer : hiddenLayers) {
-            for (Neuron n : hiddenLayer.getNeurons()) {
-                n.setUseBias(useBias);
+            for (Neuron neuron : hiddenLayer.getNeurons()) {
+                neuron.setUseBias(useBias);
             }
         }
     }
 
-    public void addLearningListener(NeuralNetworkEventListener l) {
-        learningListeners.add(NeuralNetworkEventListener.class, l);
+    public void addLearningListener(NeuralNetworkEventListener listener) {
+        learningListeners.add(NeuralNetworkEventListener.class, listener);
     }
 
-    public void removeLearningListener(NeuralNetworkEventListener l) {
-        learningListeners.remove(NeuralNetworkEventListener.class, l);
+    public void removeLearningListener(NeuralNetworkEventListener listener) {
+        learningListeners.remove(NeuralNetworkEventListener.class, listener);
     }
 
-    private void fireLearningEvent(NeuralNetworkLearningEvent e) {
+    private void fireLearningEvent(NeuralNetworkLearningEvent event) {
         Object[] listeners = learningListeners.getListenerList();
         for (int i = 0; i < listeners.length; i++) {
             if (listeners[i] == NeuralNetworkEventListener.class) {
-                ((NeuralNetworkEventListener) listeners[i + 1]).eventOccured(e);
+                ((NeuralNetworkEventListener) listeners[i + 1]).eventOccured(event);
             }
         }
     }

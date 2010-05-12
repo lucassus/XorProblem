@@ -1,7 +1,7 @@
 package edu.agh.eit.neural;
 
 import java.util.ArrayList;
-import edu.agh.eit.neural.functions.ActivationFunction;
+import edu.agh.eit.neural.functions.IActivationFunction;
 import edu.agh.eit.neural.functions.LinearFunction;
 
 public class Neuron {
@@ -11,24 +11,24 @@ public class Neuron {
     private boolean useBias = true;
     private double biasWeight = 0.0;
     private ArrayList<Synapse> inputSynapses = new ArrayList<Synapse>();
-    private ActivationFunction activationFunction;
+    private IActivationFunction activationFunction;
 
     /** Creates a new instance of Neuron */
     public Neuron() {
         setActivationFunction(new LinearFunction());
     }
 
-    public Neuron(ActivationFunction f) {
-        setActivationFunction(f);
+    public Neuron(IActivationFunction function) {
+        setActivationFunction(function);
     }
 
-    public void addSynapse(Synapse s) {
-        if (s != null) {
-            inputSynapses.add(s);
+    public void addSynapse(Synapse synapse) {
+        if (synapse != null) {
+            inputSynapses.add(synapse);
         }
     }
 
-    public void setActivationFunction(ActivationFunction activationFunction) {
+    public void setActivationFunction(IActivationFunction activationFunction) {
         this.activationFunction = activationFunction;
     }
 
@@ -46,8 +46,8 @@ public class Neuron {
 
     public void compute() {
         output = 0.0;
-        for (Synapse s : inputSynapses) {
-            output += s.getNeuron().getOutput() * s.getWeight();
+        for (Synapse synapse : inputSynapses) {
+            output += synapse.getNeuron().getOutput() * synapse.getWeight();
         }
 
         if (useBias) {
@@ -65,7 +65,7 @@ public class Neuron {
         this.error = error;
     }
 
-    public ActivationFunction getActivationFunction() {
+    public IActivationFunction getActivationFunction() {
         return activationFunction;
     }
 

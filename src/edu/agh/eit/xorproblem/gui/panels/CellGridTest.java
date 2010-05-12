@@ -11,14 +11,14 @@ public class CellGridTest {
         SwingUtilities.invokeLater(new Runnable() {
 
             public void run() {
-                JFrame f = new JFrame();
-                f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                JFrame frame = new JFrame();
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-                f.setLayout(new BorderLayout());
-                f.add(new CellGrid(20, 20));
-                f.setPreferredSize(new Dimension(300, 300));
-                f.pack();
-                f.setVisible(true);
+                frame.setLayout(new BorderLayout());
+                frame.add(new CellGrid(20, 20));
+                frame.setPreferredSize(new Dimension(300, 300));
+                frame.pack();
+                frame.setVisible(true);
             }
         });
     }

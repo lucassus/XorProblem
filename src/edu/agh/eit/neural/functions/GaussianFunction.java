@@ -1,6 +1,6 @@
 package edu.agh.eit.neural.functions;
 
-public class GaussianFunction implements ActivationFunction {
+public class GaussianFunction implements IActivationFunction {
 
     private static double a = 1.0 / Math.sqrt(2.0 * Math.PI);
 

@@ -1,6 +1,6 @@
 package edu.agh.eit.neural.functions;
 
-public class LinearFunction implements ActivationFunction {
+public class LinearFunction implements IActivationFunction {
 
     private double alpha = 1.0;
 

@@ -3,6 +3,7 @@ package edu.agh.eit.xorproblem.gui.models;
 import javax.swing.table.DefaultTableModel;
 
 public class NetworkResponseTableModel extends DefaultTableModel {
+    public static final int OUTPU_COLUMN_INDEX = 3;
 
     private static String[] columnNames = {
         "A",
@@ -30,7 +31,7 @@ public class NetworkResponseTableModel extends DefaultTableModel {
 
     @Override
     public int getColumnCount() {
-        return 3;
+        return OUTPU_COLUMN_INDEX;
     }
 
     @Override

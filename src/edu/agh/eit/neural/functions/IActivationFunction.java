@@ -1,6 +1,6 @@
 package edu.agh.eit.neural.functions;
 
-public interface ActivationFunction {
+public interface IActivationFunction {
 
     /**
      * Computes activation function value

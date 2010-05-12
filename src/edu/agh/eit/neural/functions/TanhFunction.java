@@ -1,6 +1,6 @@
 package edu.agh.eit.neural.functions;
 
-public class TanhFunction implements ActivationFunction {
+public class TanhFunction implements IActivationFunction {
 
     private double beta;
 

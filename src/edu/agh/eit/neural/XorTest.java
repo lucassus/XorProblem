@@ -2,7 +2,7 @@ package edu.agh.eit.neural;
 
 import edu.agh.eit.neural.events.NeuralNetworkEventListener;
 import edu.agh.eit.neural.events.NeuralNetworkLearningEvent;
-import edu.agh.eit.neural.functions.ActivationFunction;
+import edu.agh.eit.neural.functions.IActivationFunction;
 import edu.agh.eit.neural.functions.SigmoidFunction;
 
 public class XorTest {
@@ -30,7 +30,7 @@ public class XorTest {
             new NeuralLayer(2)
         };
 
-        ActivationFunction f = new SigmoidFunction();
+        IActivationFunction f = new SigmoidFunction();
         NeuralNetwork nn = new NeuralNetwork(2, 1, hiddenLayers, f);
         //nn.setUseBias(false);
         nn.randomizeWeight(-1.0, 1.0);
