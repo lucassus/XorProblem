@@ -6,6 +6,9 @@ import org.lucassus.nn.bp.events.NeuralNetworkEventListener;
 import org.lucassus.nn.bp.events.NeuralNetworkLearningEvent;
 import javax.swing.event.EventListenerList;
 
+/**
+ * Represents the Backpropagation Neural Network.
+ */
 public class NeuralNetwork {
     public static final int LEARNING_EVENT_CYCLE = 100;
 
@@ -76,7 +79,7 @@ public class NeuralNetwork {
         if (hiddenLayers != null) {
             for (NeuralLayer hiddenLayer : hiddenLayers) {
                 for (Neuron neuron : hiddenLayer.getNeurons()) {
-                    for (Synapse synapse : neuron.getInputSynapses()) {
+                    for (Synapse synapse : neuron.getSynapses()) {
                         synapse.setWeight((rand.nextDouble() * (max - min)) + min);
                     }
 
@@ -89,7 +92,7 @@ public class NeuralNetwork {
 
         // randomize weights in output layer
         for (Neuron neuron : outputLayer.getNeurons()) {
-            for (Synapse synapse : neuron.getInputSynapses()) {
+            for (Synapse synapse : neuron.getSynapses()) {
                 synapse.setWeight((rand.nextDouble() * (max - min)) + min);
             }
 
@@ -168,7 +171,7 @@ public class NeuralNetwork {
                 globalError += error * error;
 
                 // back propagation
-                for (Synapse synapse : outputNeuron.getInputSynapses()) {
+                for (Synapse synapse : outputNeuron.getSynapses()) {
                     synapse.getNeuron().setError(
                             synapse.getNeuron().getError()
                             + synapse.getWeight() * outputNeuron.getError());
@@ -181,7 +184,7 @@ public class NeuralNetwork {
             if (hiddenLayers != null) {
                 for (int k = hiddenLayers.length - 1; k > 0; k--) {
                     for (Neuron outputNeuron : hiddenLayers[k].getNeurons()) {
-                        for (Synapse synapse : outputNeuron.getInputSynapses()) {
+                        for (Synapse synapse : outputNeuron.getSynapses()) {
                             synapse.getNeuron().setError(
                                     synapse.getNeuron().getError()
                                     + synapse.getWeight() * outputNeuron.getError());
@@ -192,7 +195,7 @@ public class NeuralNetwork {
 
             // correct weights
             for (Neuron neuron : outputLayer.getNeurons()) {
-                for (Synapse synapse : neuron.getInputSynapses()) {
+                for (Synapse synapse : neuron.getSynapses()) {
                     synapse.setWeight(
                             synapse.getWeight()
                             + learningRate * neuron.getError() * neuron.getActivationFunction().computeDerivative(neuron.getOutput()) * synapse.getNeuron().getOutput());
@@ -210,7 +213,7 @@ public class NeuralNetwork {
             if (hiddenLayers != null) {
                 for (int k = 0; k < hiddenLayers.length; k++) {
                     for (Neuron neuron : hiddenLayers[k].getNeurons()) {
-                        for (Synapse synapse : neuron.getInputSynapses()) {
+                        for (Synapse synapse : neuron.getSynapses()) {
                             synapse.setWeight(
                                     synapse.getWeight()
                                     + learningRate * neuron.getError() * neuron.getActivationFunction().computeDerivative(neuron.getOutput()) * synapse.getNeuron().getOutput());

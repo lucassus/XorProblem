@@ -10,6 +10,7 @@ public class NetworkResponseTableModel extends DefaultTableModel {
         "B",
         "Output"
     };
+    
     // xor function
     private static Object[][] data = {
         {0, 0, 0},

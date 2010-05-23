@@ -11,6 +11,7 @@ public class XorProblem {
     public static void main(String args[]) {
         SwingUtilities.invokeLater(new Runnable() {
 
+            @Override
             public void run() {
                 // Get the native look and feel class name
                 String nativeLF = UIManager.getSystemLookAndFeelClassName();

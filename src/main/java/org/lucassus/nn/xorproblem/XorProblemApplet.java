@@ -2,7 +2,6 @@ package org.lucassus.nn.xorproblem;
 
 import javax.swing.JApplet;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
 public class XorProblemApplet extends JApplet {
     
@@ -13,10 +12,7 @@ public class XorProblemApplet extends JApplet {
 	// Install the look and feel
 	try {
 	    UIManager.setLookAndFeel(nativeLF);
-	} catch (InstantiationException e) {
-	} catch (ClassNotFoundException e) {
-	} catch (UnsupportedLookAndFeelException e) {
-	} catch (IllegalAccessException e) {
+	} catch (Exception e) {
 	}
 	
 	getContentPane().add(new XorProblemPanel());

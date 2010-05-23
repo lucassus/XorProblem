@@ -12,10 +12,12 @@ public class SpinnnerCelEditor extends AbstractCellEditor implements TableCellEd
 
     JComponent spinner = new JSpinner(new SpinnerNumberModel(2, 1, 20, 1));
 
+    @Override
     public Object getCellEditorValue() {
         return ((JSpinner) spinner).getValue();
     }
 
+    @Override
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
 
         Integer v = new Integer(value.toString());

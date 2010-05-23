@@ -13,6 +13,7 @@ public class TanhFunction implements IActivationFunction {
         this.beta = beta;
     }
 
+    @Override
     public double compute(double x) {
         double var1 = Math.pow(Math.E, getBeta() * x);
         double var2 = Math.pow(Math.E, -(getBeta() * x));
@@ -20,6 +21,7 @@ public class TanhFunction implements IActivationFunction {
         return (var1 - var2) / (var1 + var2);
     }
 
+    @Override
     public double computeDerivative(double x) {
         return 1 - x * x;
     }

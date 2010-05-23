@@ -11,7 +11,11 @@ public class CellGrid extends JPanel {
     private int x;
     private int y;
 
-    /** Creates a new instance of CellGrid */
+    /**
+     * Creates a new instance of CellGrid.
+     * @param x
+     * @param y
+     */
     public CellGrid(int x, int y) {
         if (x <= 0 || y <= 0) {
             throw new IllegalArgumentException();

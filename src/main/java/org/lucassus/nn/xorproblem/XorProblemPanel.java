@@ -180,6 +180,7 @@ public class XorProblemPanel extends javax.swing.JPanel {
             JMenuItem lookAndFeelMenuItem = new JMenuItem(humanReadableName);
             lookAndFeelMenuItem.addActionListener(new java.awt.event.ActionListener() {
 
+                @Override
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     try {
                         UIManager.setLookAndFeel(className);
@@ -419,7 +420,7 @@ public class XorProblemPanel extends javax.swing.JPanel {
                     .add(jLabel1)
                     .add(spinnerHiddenLayersCount, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 18, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(scrollPaneHiddenLayers, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 157, Short.MAX_VALUE)
+                .add(scrollPaneHiddenLayers, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 158, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -621,7 +622,7 @@ public class XorProblemPanel extends javax.swing.JPanel {
                     .add(panelPatterns, 0, 99, Short.MAX_VALUE)
                     .add(panelEpochs, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(scrollPaneLearningData, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
+                .add(scrollPaneLearningData, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -645,7 +646,7 @@ public class XorProblemPanel extends javax.swing.JPanel {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jPanel1Layout.createSequentialGroup()
-                .add(scrollPaneNetworkResponse, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE)
+                .add(scrollPaneNetworkResponse, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 302, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -694,7 +695,7 @@ public class XorProblemPanel extends javax.swing.JPanel {
             panelHelpLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(panelHelpLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(scrollPaneHelp, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 340, Short.MAX_VALUE)
+                .add(scrollPaneHelp, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 341, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -705,10 +706,10 @@ public class XorProblemPanel extends javax.swing.JPanel {
         jLabel12.setFont(new java.awt.Font("Tahoma", 1, 18));
         jLabel12.setText("XOR Problem");
 
-        jLabel11.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jLabel11.setFont(new java.awt.Font("Tahoma", 0, 12));
         jLabel11.setText("Łukasz Bandzarewicz <lucassus@gmail.com>");
 
-        jLabel10.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jLabel10.setFont(new java.awt.Font("Tahoma", 0, 12));
         jLabel10.setText("Maciej Kachel <kachelm@gmail.com>");
 
         jLabel9.setText("EiT AGH (C) 2006");
@@ -730,7 +731,7 @@ public class XorProblemPanel extends javax.swing.JPanel {
                             .add(jLabel11)
                             .add(jLabel12)))
                     .add(jLabel9))
-                .addContainerGap(64, Short.MAX_VALUE))
+                .addContainerGap(179, Short.MAX_VALUE))
             .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap(276, Short.MAX_VALUE)
                 .add(jLabel13)
@@ -740,15 +741,15 @@ public class XorProblemPanel extends javax.swing.JPanel {
             jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel8)
+                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(jPanel2Layout.createSequentialGroup()
                         .add(jLabel12)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 23, Short.MAX_VALUE)
                         .add(jLabel10)
                         .add(4, 4, 4)
                         .add(jLabel11)
-                        .add(38, 38, 38)))
+                        .add(38, 38, 38))
+                    .add(jLabel8))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jLabel9)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
@@ -770,7 +771,7 @@ public class XorProblemPanel extends javax.swing.JPanel {
             .add(panelAboutLayout.createSequentialGroup()
                 .addContainerGap()
                 .add(jPanel2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(169, Short.MAX_VALUE))
+                .addContainerGap(176, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("About", panelAbout);
@@ -898,6 +899,7 @@ public class XorProblemPanel extends javax.swing.JPanel {
 
             SwingUtilities.invokeLater(new Runnable() {
 
+                @Override
                 public void run() {
                     enableComponents(true);
                 }
@@ -910,6 +912,7 @@ public class XorProblemPanel extends javax.swing.JPanel {
 
         SwingUtilities.invokeLater(new Runnable() {
 
+            @Override
             public void run() {
                 enableComponents(false);
             }
@@ -1037,6 +1040,7 @@ public class XorProblemPanel extends javax.swing.JPanel {
 
                 SwingUtilities.invokeLater(new Runnable() {
 
+                    @Override
                     public void run() {
                         enableComponents(true);
                         buttonStartLearning.setText("Start learning");

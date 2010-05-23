@@ -12,10 +12,12 @@ public class SigmoidFunction implements IActivationFunction {
         setBeta(beta);
     }
 
+    @Override
     public double compute(double x) {
         return (1.0 / (1.0 + Math.pow(Math.E, -(beta * x))));
     }
 
+    @Override
     public double computeDerivative(double x) {
         return x * (1.0 - x);
     }

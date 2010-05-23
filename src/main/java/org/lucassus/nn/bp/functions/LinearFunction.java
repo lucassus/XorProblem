@@ -12,10 +12,12 @@ public class LinearFunction implements IActivationFunction {
         this.alpha = alpha;
     }
 
+    @Override
     public double compute(double x) {
         return alpha * x;
     }
 
+    @Override
     public double computeDerivative(double x) {
         return alpha;
     }

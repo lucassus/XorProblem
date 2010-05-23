@@ -9,6 +9,7 @@ public class LearningPatternsDataModel extends DefaultTableModel {
         "B",
         "Expected output"
     };
+    
     // xor function
     private static Object[][] data = {
         {0, 0, 0},

@@ -49,9 +49,11 @@ public class Cell extends JPanel implements MouseListener {
 
     }
 
+    @Override
     public void mouseClicked(MouseEvent e) {
     }
 
+    @Override
     public void mousePressed(MouseEvent e) {
         switch (getValue()) {
             case 0:
@@ -68,11 +70,13 @@ public class Cell extends JPanel implements MouseListener {
         repaint();
     }
 
+    @Override
     public void mouseReleased(MouseEvent e) {
         parent.setMouseHeldWhite(false);
         parent.setMouseHeldBlack(false);
     }
 
+    @Override
     public void mouseEntered(MouseEvent e) {
         if (parent.isMouseHeldBlack()) {
             value = 1;
@@ -83,6 +87,7 @@ public class Cell extends JPanel implements MouseListener {
         }
     }
 
+    @Override
     public void mouseExited(MouseEvent e) {
     }
 
